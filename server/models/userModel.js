@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcrypt');
 
 const userSchema = mongoose.Schema(
   {
@@ -22,14 +23,51 @@ const userSchema = mongoose.Schema(
     },
     email: {
       type: String,
+      trim: true,
       validate: [validator.isEmail, `votre E-mail n'est pas valide`],
       required: [true, 'Veillez entrer votre E-mail !'],
     },
-    password: String,
+    numero: {
+      type: Number,
+      required: [true, 'veillez entrer un numero de telephone joignable'],
+      minLength: 10,
+    },
+    password: {
+      type: String,
+      trim: true,
+      required: [true, 'veillez entrer un mot de passe SVP !'],
+    },
+    passwordConfirm: {
+      type: String,
+      trim: true,
+      required: [true, 'veillez confirmer votre mot de passe SVP !'],
+      validate: {
+        validator: function (password) {
+          return password === this.password;
+        },
+        message: 'les mots de passe ne sont pas identiques',
+      },
+    },
     panier: [{ type: mongoose.Schema.objectId, populate: true }],
     envies: [{ type: mongoose.Schema.objectId, populate: true }],
   },
   { timestamps: true, timeseries: true }
 );
+
+// METHODS
+userSchema.methods.correctPassword = async function (
+  password,
+  userPassword
+) {
+  return await bcrypt.compare(password, userPassword);
+};
+
+// PRE
+userSchema.pre('save', async function (next) {
+  const salt = await bcrypt.genSalt(12, 'a');
+  this.password = bcrypt.hash(this.password, salt);
+  this.passwordConfirm = undefined;
+  next();
+});
 
 module.exports = mongoose.model('User', userSchema);
