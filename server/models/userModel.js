@@ -29,7 +29,10 @@ const userSchema = mongoose.Schema(
     },
     numero: {
       type: Number,
-      required: [true, 'veillez entrer un numero de telephone joignable'],
+      required: [
+        true,
+        'veillez entrer un numero de telephone joignable',
+      ],
       minLength: 10,
     },
     password: {
@@ -48,10 +51,23 @@ const userSchema = mongoose.Schema(
         message: 'les mots de passe ne sont pas identiques',
       },
     },
-    panier: [{ type: mongoose.Schema.objectId, populate: true }],
-    envies: [{ type: mongoose.Schema.objectId, populate: true }],
+    panier: [
+      {
+        type: mongoose.Types.objectId,
+        ref: 'Product',
+        populate: true,
+      },
+    ],
+    envies: [
+      {
+        type: mongoose.Types.objectId,
+        ref: 'Product',
+        populate: true,
+      },
+    ],
+    // codeCoupon: String,
   },
-  { timestamps: true, timeseries: true }
+  { timestamps: true }
 );
 
 // METHODS
@@ -62,11 +78,19 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(password, userPassword);
 };
 
+// VIRTUALS
+userSchema.virtual('commands', {
+  ref: 'Order',
+  localField: '_id',
+  foreignField: 'user',
+});
+
 // PRE
 userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(12, 'a');
   this.password = bcrypt.hash(this.password, salt);
   this.passwordConfirm = undefined;
+  // this.codeCoupon = 'AM-NEW';
   next();
 });
 

@@ -1,6 +1,20 @@
 const Product = require('../models/productModel');
 const catchAsync = require('../utils/catchAsync');
 const response = require('../utils/response');
+const Order = require('../models/orderModel');
+const User = require('../models/userModel');
+
+// FONCTIONS
+
+const calculPrice = (array) => {
+  let value = 0;
+  array.forEach((e) => {
+    value = value + e.prix;
+  });
+  return value;
+};
+
+/////////////////////////////////////////////////////////////
 
 // MOTEUR DE RECHERCHE & FILTRE DE RECHERCHE
 exports.makeSearch = catchAsync(async (req, res, next) => {
@@ -28,10 +42,22 @@ exports.putInBasket = catchAsync(async (req, res, next) => {
 });
 
 // SYSTEME DE PAIEMENT
-exports.order = catchAsync(async (req, res, next) => {
-    // commande
-    //paiement par carte bacnaire
-    //validation
+exports.orderProducts = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const currentUser = await User.findById(userId);
+  // le prix de tous les produits dans le panier
+  const productsPrice = calculPrice(currentUser.panier);
+  // commande
+  const options = {
+    user: currentUser.id,
+    products: currentUser.panier,
+    prix: productsPrice,
+  };
+  //paiement par carte bacnaire
+  //validation
+  await Order.create(options);
+  (await currentUser.panier) === [];
+  currentUser.save({ validateBeforeSave: false });
 });
 
 // POUVOIR TELECHARGER SON RECU

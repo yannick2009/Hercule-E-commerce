@@ -2,12 +2,15 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.objectId },
-    products: [{ type: mongoose.Schema.objectId }],
+    user: { type: mongoose.Types.objectId, ref: 'User' },
+    products: [{ type: mongoose.Tpes.objectId, ref: 'Product' }],
     prix: Number,
+    codeCoupon: { type: String, default: '' },
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 

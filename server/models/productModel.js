@@ -10,7 +10,10 @@ const productSchema = new mongoose.Schema(
     categorie: {
       type: String,
       enum: ['sneaker', 'culotte', 'T-shirt', 'complet'],
-      required: [true, 'une catégorie est necessaire pour chaque article'],
+      required: [
+        true,
+        'une catégorie est necessaire pour chaque article',
+      ],
     },
     quantite: {
       type: Number,
