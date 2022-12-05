@@ -85,7 +85,7 @@ userSchema.virtual('commands', {
   foreignField: 'user',
 });
 
-// PRE
+// PRE 
 userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(12, 'a');
   this.password = bcrypt.hash(this.password, salt);
