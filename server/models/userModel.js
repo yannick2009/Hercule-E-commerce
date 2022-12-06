@@ -53,19 +53,18 @@ const userSchema = mongoose.Schema(
     },
     panier: [
       {
-        type: mongoose.Types.objectId,
+        type: mongoose.Types.ObjectId,
         ref: 'Product',
         populate: true,
       },
     ],
     envies: [
       {
-        type: mongoose.Types.objectId,
+        type: mongoose.Types.ObjectId,
         ref: 'Product',
         populate: true,
       },
     ],
-    // codeCoupon: String,
   },
   { timestamps: true }
 );
@@ -85,12 +84,11 @@ userSchema.virtual('commands', {
   foreignField: 'user',
 });
 
-// PRE 
+// PRE
 userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(12, 'a');
   this.password = bcrypt.hash(this.password, salt);
   this.passwordConfirm = undefined;
-  // this.codeCoupon = 'AM-NEW';
   next();
 });
 

@@ -61,7 +61,12 @@ exports.orderProducts = catchAsync(async (req, res, next) => {
 });
 
 // POUVOIR TELECHARGER SON RECU
-exports.dealDonePdf = catchAsync(async (req, res, next) => {});
+exports.dealDonePdf = catchAsync(async (req, res, next) => {
+  // recuperer id de la commande
+  // generer tableau html pour la commande
+  // transformation en pdf
+  // telechargement du pdf 
+});
 
 // LISTE D'ENVIES (LISTE DE PRODUITS, PRIX)
 exports.favoris = catchAsync(async (req, res, next) => {
