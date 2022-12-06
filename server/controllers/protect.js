@@ -5,7 +5,7 @@ const AppError = require('../utils/appError');
 const { promisify } = require('node:util');
 
 // MIDDLEWARE PROTECTION
-exports.protect = catchAsync(async (req, res, next) => {
+module.exports = catchAsync(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&

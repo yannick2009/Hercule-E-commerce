@@ -3,7 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const AppError = require('./utils/appError');
 const globalError = require('./controllers/errorController');
-const userRoute = require('./routes/userRoutes')
+const userRoute = require('./routes/userRoutes');
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '500kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', userRoute);
+app.use('/api/v1/users', userRoute);
 
 app.all('*', (req, res, next) => {
   next(

@@ -18,15 +18,27 @@ exports.createUSer = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const user = await User.findById(id);
-  user ? response.success(res, 200, user) : next(new AppError());
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  user
+    ? response.success(res, 200, user)
+    : next(
+        new AppError(`Nous ne connaissons pas ce utilisateur là`, 404)
+      );
+});
+
+exports.modifUser = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+  const user = await User.findByIdAndUpdate(userId, req.body, {
+    new: true,
+  });
+  response.success(user);
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  (await User.findById(id))
-    ? await User.findByIdAndDelete(id)
+  const { userId } = req.params;
+  (await User.findById(userId))
+    ? await User.findByIdAndDelete(userId)
     : next(new AppError(`cet utilisateur là n'existe pas`, 404));
   response.deleted(res, 200, 'utilisateur supprimé avec success');
 });
