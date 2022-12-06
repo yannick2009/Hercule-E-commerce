@@ -15,7 +15,6 @@ const calculPrice = (array) => {
 /////////////////////////////////////////////////////////////
 
 // MOTEUR DE RECHERCHE & FILTRE DE RECHERCHE
-
 // faire une recherche
 exports.makeSearch = catchAsync(async (req, res, next) => {
   const { value, categorie } = req.body;
@@ -32,7 +31,6 @@ exports.makeSearch = catchAsync(async (req, res, next) => {
 });
 
 //SYSTEME DE PANIER (LISTE DES PRODUITS, PRIX & CODE PROMO)
-
 // ajouter au panier
 exports.inBasket = catchAsync(async (req, res, next) => {
   const user = User.findById(req.user.id);
@@ -57,7 +55,6 @@ exports.outBasket = catchAsync(async (req, res, next) => {
 });
 
 // SYSTEME DE PAIEMENT
-
 // commander
 exports.orderProducts = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
@@ -77,12 +74,10 @@ exports.orderProducts = catchAsync(async (req, res, next) => {
   currentUser.save({ validateBeforeSave: false });
 });
 
-// POUVOIR TELECHARGER SON RECU
-exports.dealDonePdf = catchAsync(async (req, res, next) => {
-  // recuperer id de la commande
-  // generer tableau html pour la commande
-  // transformation en pdf
-  // telechargement du pdf
+exports.oneOrder = catchAsync(async (req, res, next) => {
+  const { orderId } = req.params;
+  const command = await Order.findById(orderId);
+  response.success(res, 200, command);
 });
 
 // LISTE D'ENVIES (LISTE DE PRODUITS, PRIX)
@@ -118,5 +113,15 @@ exports.dealsHistory = catchAsync(async (req, res, next) => {
   response.success(res, 200, user.commands);
 });
 
+/** TO RESOLVE */
+
 // NOTER UN PRODUIT
 exports.giveMarktoProduct = catchAsync(async (req, res, next) => {});
+
+// POUVOIR TELECHARGER SON RECU
+exports.genPdf = catchAsync(async (req, res, next) => {
+  // recuperer id de la commande
+  // generer tableau html pour la commande
+  // transformation en pdf
+  // telechargement du pdf
+});

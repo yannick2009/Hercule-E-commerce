@@ -6,35 +6,40 @@ const protect = require('../controllers/protect');
 
 const router = express.Router();
 
-router.route('/login').post(authControllers.login);
-router.route('/sign-up').post(authControllers.signup);
+router.route('/login').post(authControllers.login); // se connecter
+router.route('/sign-up').post(authControllers.signup); // s'inscrire
 
 // ADMIN
 router
   .route('/')
-  .get(adminControllers.allUsers)
-  .post(adminControllers.createUSer);
+  .get(adminControllers.allUsers) // Tous les utlisateurs
+  .post(adminControllers.createUSer); // creer un utilisateur
 
 router
   .route('/:userId')
-  .get(adminControllers.getUser)
-  .patch(adminControllers.modifUser)
-  .delete(adminControllers.deleteUser);
+  .get(adminControllers.getUser) // recuperer un utilisateur
+  .patch(adminControllers.modifUser) // modifier les infos de un utilisateur
+  .delete(adminControllers.deleteUser); // supprimer un utilisateur
 
 // USER
 router.use(protect);
 
-router.route('/search').post(userControllers.makeSearch);
+router.route('/search').post(userControllers.makeSearch); // faire une recherche
 
-router.route('/in-basket/:productId').post(userControllers.inBasket);
+router.route('/in-basket/:productId').post(userControllers.inBasket); // mettre dans le panier
 router
   .route('/out-basket/:productId')
-  .post(userControllers.outBasket);
+  .post(userControllers.outBasket); // retirer du panier
 
-router.route('/in-favoris').post(userControllers.inFavoris);
-router.route('/out-favoris').post(userControllers.outFavoris);
+router.route('/in-favoris').post(userControllers.inFavoris); // ajouter aux favoris
+router.route('/out-favoris').post(userControllers.outFavoris); // supprimer des favoris
 
-router.route('/command').post(userControllers.orderProducts);
-router.route('/command/:orderId').post(userControllers.orderProducts);
+router.route('/command').post(userControllers.orderProducts); // commander un ou des produits
+router
+  .route('/command/:orderId')
+  .get(userControllers.oneOrder) // voir une ancienne commande
+  .post(userControllers.genPdf); // generer un pdf en guise de recu pour une ancienne commande
 
-module.exports = router;
+router.route('/history').get(userControllers.dealsHistory); // voir la liste des anciennes commandes
+
+module.exports = router; // EXPORTATION
